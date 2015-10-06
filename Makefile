@@ -11,7 +11,7 @@ PROJECT = certifi
 
 include erlang.mk
 
-deps::
+priv/$(CA_BUNDLE): 
 	@curl -o $(CA_BUNDLE) https://mkcert.org/generate/
 	@cat $(CA_SRC) \
 		| head -n `grep -n "%% GENERATED" $(CA_SRC) | cut -d : -f 1` \
@@ -21,6 +21,8 @@ deps::
 		| tail -n +`grep -n "%% GENERATED" $(CA_SRC) | cut -d : -f 1`  \
 		>> $(CA_OUT)
 	mv $(CA_BUNDLE) priv/
+
+deps:: priv/$(CA_BUNDLE)
 
 clean::
 	@rm -rf priv/$(CA_BUNDLE)
